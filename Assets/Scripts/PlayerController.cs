@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour
 
 {
     //Player movement and rigidbody 2d
-    public Rigidbody2D rb;
+    private Rigidbody2D rb;
     public Vector2 movement;
     //----------------------------Checking speed and jump height
     public float speed;
@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     //----------------------------------JUMPING
     public int extraJumps;
     public int extraJumpsValue;
+    //-=--------------------------------Player input check
+    string buttonPressed;
 
 
 
@@ -28,14 +30,16 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         extraJumpsValue = 2;
-        speed = 20.0f;
-        jumpHeight = 5.0f;
+        speed = 10.0f;
+        jumpHeight = 7.0f;
         facingRight = true;
         rb = GetComponent<Rigidbody2D>();
+
     }
     // Update is called once per frame
     void Update()
     {
+
         //check the input 
         checkMovementInput();
         //check facing direction
@@ -43,10 +47,11 @@ public class PlayerController : MonoBehaviour
     }
     void FixedUpdate()
     {
+
         //Check if player is grounded
         checkGround();
         //Move the player
-        movePlayer(movement);
+        movePlayer();
     }
     void checkGround()
     {
@@ -74,42 +79,59 @@ public class PlayerController : MonoBehaviour
     //------------------------------MOVEMENT METHODS---------------------------------
     void checkMovementInput()
     {
+        if (Input.GetKey(KeyCode.D))
+        {
+            buttonPressed = "D";
+        }
+        else if (Input.GetKey(KeyCode.A))
+        {
+            buttonPressed = "A";
+        }
+        else
+        {
+            buttonPressed = "None";
+
+        }
+
+
+        if (Input.GetKey(KeyCode.Space) && extraJumps != 0)
+        {
+            buttonPressed = "Space";
+        }
+        else if (Input.GetKey(KeyCode.Space) && extraJumps == 0 && isGrounded)
+        {
+            buttonPressed = "Space";
+        }
+    }
+    void movePlayer()
+    {
         if (isGrounded)
         {
             extraJumps = extraJumpsValue;
         }
-        if (Input.GetKey(KeyCode.D))
+        if (buttonPressed == "D")
         {
-            movement = (new Vector2(speed, 0));
+            rb.AddForce(new Vector2(speed, rb.velocity.y));
         }
-        else if (Input.GetKey(KeyCode.A))
+        else if (buttonPressed == "A")
         {
-            movement = (new Vector2(-speed, 0));
-        }
-        else if (Input.GetKeyDown(KeyCode.Space) && extraJumps != 0)
-        {
-            movement = (new Vector2(0, jumpHeight));
-            extraJumps--;
-        }
-        else if (Input.GetKeyDown(KeyCode.Space) && extraJumps == 0 && isGrounded)
-        {
-            movement = (new Vector2(0, jumpHeight));
+            rb.AddForce(new Vector2(-speed, rb.velocity.y));
         }
         else
         {
-            movement = (new Vector2(0, 0));
-        }
-    }
-    void movePlayer(Vector2 direction)
-    {
-        if (direction.y <= 0)
-        {
-            rb.AddForce(direction);
+            rb.velocity = new Vector2(0, rb.velocity.y);
 
         }
-        else
+
+        if (buttonPressed == "Space" && extraJumps != 0)
         {
-            rb.AddForce(direction, ForceMode2D.Impulse);
+            rb.velocity = (new Vector2(rb.velocity.x, jumpHeight));
+            extraJumps--;
         }
+        else if (buttonPressed == "Space" && extraJumps == 0 && isGrounded)
+        {
+            rb.velocity = (new Vector2(rb.velocity.x, jumpHeight));
+        }
+
     }
 }
