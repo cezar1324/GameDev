@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        extraJumpsValue = 2;
+        extraJumpsValue = 3;
         speed = 10.0f;
         jumpHeight = 7.0f;
         facingRight = true;
@@ -109,6 +109,8 @@ public class PlayerController : MonoBehaviour
         {
             extraJumps = extraJumpsValue;
         }
+
+
         if (buttonPressed == "D")
         {
             rb.AddForce(new Vector2(speed, rb.velocity.y));
@@ -122,6 +124,7 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(0, rb.velocity.y);
 
         }
+
 
         if (buttonPressed == "Space" && extraJumps != 0)
         {
