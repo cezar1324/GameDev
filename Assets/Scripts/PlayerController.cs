@@ -29,7 +29,11 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+<<<<<<< HEAD
         extraJumpsValue = 13;
+=======
+        extraJumpsValue = 44;
+>>>>>>> b747f01a9dc667f21f810c7cfc5ca54141353ed7
         speed = 10.0f;
         jumpHeight = 7.0f;
         facingRight = true;
